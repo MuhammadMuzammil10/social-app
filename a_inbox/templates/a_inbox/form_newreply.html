@@ -1,0 +1,19 @@
+<div class="flex flex-col md:flex-row gap-1 md:gap-6 w-full">
+    <img class="w-14 h-14 object-cover rounded-full" src="{{ user.profile.avatar }}">
+    <form method="POST" action="{% url 'inbox-newreply' conversation.id %}" class="w-full">
+        {% csrf_token %}
+
+        {{ new_reply_form }}
+
+            <!-- <wordtune-suggestions-container-block
+                style="position: absolute; overflow: hidden; pointer-events: none; width: 527px; height: 128px; top: 24px; left: 120px; padding: 16px 19.2px; margin: 0px 0px 16px;"><wordtune-suggestions-container
+                    style="width: 527px; display: block; height: 128px;"></wordtune-suggestions-container></wordtune-suggestions-container-block><wordtune-cards-container
+                id="wordtune-cards-container-id" style="z-index: 999;"></wordtune-cards-container> -->
+        
+        <div class="flex justify-between">
+            <button type="submit" class="mt-1">Send Message</button>
+            <a class="button secondaryAction ml-1"
+                href="{{ request.META.HTTP_REFERER }}">Cancel</a>
+        </div>
+    </form>
+</div>

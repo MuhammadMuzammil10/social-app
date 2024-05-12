@@ -1,0 +1,34 @@
+{% load static %}
+<ul id="conversations-list" class="flex flex-col gap-1 divide-y mt-2">
+    {% for c in my_conversation %}      
+    <li class=" {% if conversaiton == c %} bg-zinc-200  {% endif %} rounded-full sm:rounded-lg relative mt-2 sm:mt-0">
+        <a href="{% url 'inbox' c.id %}"
+            class="flex items-center justify-center lg:justify-normal gap-1 hover:bg-zinc-200 rounded-full sm:rounded-lg p-1.5 sm:p-4 cursor-pointer">
+
+            {% for participant in c.participants.all %} 
+            {% if participant != request.user %}
+              
+            <!-- <div class="absolute top-3 left-11 [&>*]:border-2 [&>*]:border-gray-100"
+                hx-get="/inbox/notify/ccc6c1c3-61a5-4c28-85e1-00c04efd192e/" hx-trigger="load" hx-target="this"
+                hx-swap="innerHTML"></div> -->
+            <img class="w-11 h-11 lg:w-10 lg:h-10 object-cover rounded-full"src="{{ participant.profile.avatar }}">
+            <div class="absolute top-3 left-11 [&>*]:border-2 [&>*]:border-gray-100"
+                hx-get="{% url 'notify-newmessage' c.id %}"
+                hx-trigger="load"
+                hx-swap="innerHTML"
+                hx-target="this">
+            </div>
+            <div class="hidden lg:block font-bold ml-1">{{ participant.profile.name }}</div>
+            
+                {% if participant.is_superuser %}    
+                <img class="w-4 h-4 ml-1" src="{% static 'images/verified.png' %}"/>
+                {% endif %}
+            {% endif %}             
+
+            {% endfor %}
+        </a>
+    </li>
+    {% endfor %}
+
+
+</ul>
