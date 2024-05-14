@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'django.contrib.staticfiles',
+    'cloudinary_storage',
+    'cloudinary',
     'django_cleanup.apps.CleanupConfig',
     'a_posts',
     'a_users',
@@ -117,7 +119,9 @@ DATABASES = {
     }
 }
 
-DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
+POSTGRES_LOCALLY = False
+if ENVIROMENT == 'production' or POSTGRES_LOCALLY == True:
+    DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -136,6 +140,7 @@ DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 #         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
 #     },
 # ]
+
 
 
 # Internationalization
@@ -157,10 +162,21 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = os.path.join(BASE_DIR,'static'),
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
-print(STATIC_ROOT, 'static root')
 
 MEDIA_URL = 'media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+
+if ENVIROMENT == 'production' or POSTGRES_LOCALLY == True:
+    DEFAULT_MEDIA_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+else:
+    MEDIA_ROOT = BASE_DIR / 'media'
+    
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': env('CLOUD_NAME'),
+    'API_KEY': env('CLOUD_API_KEY'),
+    'API_SECRET': env('CLOUD_API_SECRET')
+}
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 

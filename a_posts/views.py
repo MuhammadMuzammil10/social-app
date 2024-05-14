@@ -34,17 +34,13 @@ def home_view(request, tag_slug=None):
 
 def post_create_view(request):
     form = PostCreateForm()
-    print('request')
     if request.method == 'POST':
-        print("Post request")
         form = PostCreateForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-            # print(form.data, '------form.data')
             website = requests.get(form.data['url'])
             sourcecode = BeautifulSoup(website.text, 'html.parser')
             find_image = sourcecode.select('meta[property="og:image"][content^="https://live.staticflickr.com/"]')
-            print(find_image[0]['content'], "findimage")
             image = find_image[0]['content']
             post.image = image
             
@@ -106,7 +102,6 @@ def post_page_view(request, pk):
 
 @login_required
 def comment_sent(request, pk):
-    print("comment sent function work")
     post = get_object_or_404(Post, id = pk)
     replyform = ReplyCreateForm()
 
@@ -118,7 +113,6 @@ def comment_sent(request, pk):
             comment.author = request.user
             comment.parent_post = post
             comment.save()
-            print("comment saved! ")
     
     context = {
         'post' : post,
@@ -178,10 +172,10 @@ def like_toggle(model):
             if request.user != post.author:
                 if user_exist:
                     post.likes.remove(request.user)
-                    print("like remove")
+                   
                 else:
                     post.likes.add(request.user)
-                    print("like add")
+                   
             return func(request, post)
         return wrapper
     return inner_func

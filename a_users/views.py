@@ -13,7 +13,6 @@ from django.db.models import Count
 # Create your views here.
 
 def profile_view(request, username=None):
-    
     if username:
         profile = get_object_or_404(User, username = username).profile
     else:
@@ -40,8 +39,9 @@ def profile_view(request, username=None):
             
         return render(request, 'snippets/loop_profile_posts.html', {'posts':posts})
             
-    
     context = {'profile' : profile, 'posts' : posts, 'new_message_form' : new_message_form}
+    context['path'] = request.path.strip('/')
+    context['author'] = username
     return render(request, 'a_users/profile.html',context )
 
 @login_required

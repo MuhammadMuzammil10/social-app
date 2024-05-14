@@ -2087,7 +2087,7 @@ input[name="remember"] {
 }
 
 .gradient-text {
-  background: linear-gradient(to right, #b1ebd3, #6EE7B7);
+  background: linear-gradient(to right, #0959b6, #6EE7B7);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   /* Safari */
@@ -2095,6 +2095,7 @@ input[name="remember"] {
   font-weight: bold;
   font-family: Arial, sans-serif;
   text-align: center;
+  font-size: 18px;
 }
 
 .hover\:scale-95:hover {
