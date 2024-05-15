@@ -12,18 +12,15 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-from environ import Env
 
+from environ import Env
+env = Env()
+Env.read_env()
+ENVIRONMENT = env('ENVIRONMENT', default='production')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Initialize environ
-env = Env()
-Env.read_env()
-
-
-ENVIROMENT = env('ENVIROMENT', default='production')
 
 
 # Quick-start development settings - unsuitable for production
@@ -33,12 +30,14 @@ ENVIROMENT = env('ENVIROMENT', default='production')
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-if ENVIROMENT == 'development':
+if ENVIRONMENT == 'development':
     DEBUG = True
 else:
     DEBUG = False
 
 ALLOWED_HOSTS = ['.vercel.app', '.now.sh', '127.0.0.1']
+
+CSRF_TRUSTED_ORIGINS = [ 'https://*.onrender.com' ]
 
 INTERNAL_IPS = [
     '127.0.0.1',
@@ -123,7 +122,7 @@ DATABASES = {
 }
 
 POSTGRES_LOCALLY = False
-if ENVIROMENT == 'production' or POSTGRES_LOCALLY == True:
+if ENVIRONMENT == 'production' or POSTGRES_LOCALLY == True:
     DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 
 # Password validation
@@ -168,17 +167,15 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 
 MEDIA_URL = 'media/'
 
-if ENVIROMENT == 'production' or POSTGRES_LOCALLY == True:
-    DEFAULT_MEDIA_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+if ENVIRONMENT == 'production' or POSTGRES_LOCALLY == True: 
+    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    CLOUDINARY_STORAGE = {
+        'CLOUD_NAME': env('CLOUD_NAME'),
+        'API_KEY': env('CLOUD_API_KEY'),
+        'API_SECRET': env('CLOUD_API_SECRET')
+    }
 else:
     MEDIA_ROOT = BASE_DIR / 'media'
-    
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': env('CLOUD_NAME'),
-    'API_KEY': env('CLOUD_API_KEY'),
-    'API_SECRET': env('CLOUD_API_SECRET')
-}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -190,6 +187,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 
-ACCOUNT_USERNAME_BLACKLIST = ['admin', 'accounts', 'category', 'profile', 'post', 'inbox']
+ACCOUNT_USERNAME_BLACKLIST = ['admin', 'accounts', 'category', 'profile', 'post', 'inbox', 'offical']
 
 ACCOUNT_SIGNUP_REDIRECT_URL = '/profile/onboarding/'
