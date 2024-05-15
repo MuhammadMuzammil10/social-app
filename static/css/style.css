@@ -2087,7 +2087,7 @@ input[name="remember"] {
 }
 
 .gradient-text {
-  background: linear-gradient(to right, #0959b6, #6EE7B7);
+  background: linear-gradient(to right,#03CFD9,#0959b6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   /* Safari */
