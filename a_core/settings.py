@@ -14,6 +14,10 @@ from pathlib import Path
 import dj_database_url
 import environ
 
+
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
 # Initialize environ
 env = environ.Env(
     # Set default values and casting
@@ -23,10 +27,6 @@ env = environ.Env(
 # Read the .env file
 environ.Env.read_env(os.path.join(BASE_DIR, '/a_core/.env'))
 ENVIROMENT = env('ENVIROMENT', default='production')
-
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
