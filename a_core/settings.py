@@ -12,20 +12,17 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-import environ
+from environ import Env
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Initialize environ
-env = environ.Env(
-    # Set default values and casting
-    DEBUG=(bool, False)
-)
+env = Env()
+Env.read_env()
 
-# Read the .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 ENVIROMENT = env('ENVIROMENT', default='production')
 
 
