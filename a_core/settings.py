@@ -12,10 +12,16 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 import dj_database_url
-from environ import Env
+import environ
 
-env = Env()
-Env.read_env()
+# Initialize environ
+env = environ.Env(
+    # Set default values and casting
+    DEBUG=(bool, False)
+)
+
+# Read the .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '/a_core/.env'))
 ENVIROMENT = env('ENVIROMENT', default='production')
 
 
@@ -27,7 +33,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-go8-&an^1ulu_%8)*84r^j9&o#e9ns5h=p0^5*)9+#m=iy%&n7'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 if ENVIROMENT == 'development':
