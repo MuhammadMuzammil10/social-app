@@ -25,7 +25,7 @@ env = environ.Env(
 )
 
 # Read the .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '/a_core/.env'))
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 ENVIROMENT = env('ENVIROMENT', default='production')
 
 
