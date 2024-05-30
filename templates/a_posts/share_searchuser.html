@@ -1,0 +1,25 @@
+<form action="{% url 'share-post' %}" method="POST">
+    {% csrf_token %}
+    <!-- Hidden Input for Post ID -->
+    <input type="hidden" name="post_id" x-model="post_id" >
+    <h3 class="text-xl font-bold mb-4" id="modal-title">
+        Share
+    </h3>
+    <div id="new-message">
+        <div class="flex gap-2 items-center">
+            <span class="font-bold">To:</span>
+            <input class="p-3 w-screen lg:full" placeholder="Search user ..." type="text" name="search_user"
+                hx-get="{% url 'share-searchusers' %}" hx-trigger="keyup changed" hx-target="#search-results-{{ post.id }}"
+                hx-swap="innerHTML">
+        </div>
+        <div id="search-results-{{ post.id }}" class="block h-60 overflow-y-auto">
+
+        </div>
+    </div>
+    <!-- Footer -->
+    <div class="sticky bottom-0 bg-white p-4 z-10">
+        <button class="w-full py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none">
+            Share
+        </button>
+    </div>
+</form>

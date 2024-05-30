@@ -26,25 +26,34 @@ def inbox_view(request, conversation_id=None):
     }
     return render(request, 'a_inbox/inbox.html', context)
 
-@login_required
-def search_users_view(request):
-    letters = request.GET.get('search_user')
-    if request.htmx:
-        if len(letters) > 0:
-            
-            profiles = Profile.objects.filter(realname__icontains=letters).exclude(realname = request.user.profile.realname)
+    
+def search_users():
+    def inner_func(func):
+        def wrapper(request, *args, **kwargs):
+            letters = request.GET.get('search_user')
+            if request.htmx:
+                if len(letters) > 0:
+                    
+                    profiles = Profile.objects.filter(realname__icontains=letters).exclude(realname = request.user.profile.realname)
 
-            users_id = profiles.values_list('user', flat=True)
+                    users_id = profiles.values_list('user', flat=True)
+                    
+                    users = User.objects.filter(
+                        Q(username__startswith=letters) | Q(id__in = users_id)
+                    ).exclude(username = request.user.username)
+                    
+                    return func(request, users)
+                else:
+                    return HttpResponse('')
+            else:
+                raise Http404()
+        return wrapper
+    return inner_func
             
-            users = User.objects.filter(
-                Q(username__startswith=letters) | Q(id__in = users_id)
-            ).exclude(username = request.user.username)
-            
-            return render(request, 'a_inbox/list_searchusers.html', {'users' : users})
-        else:
-            return HttpResponse('')
-    else:
-        raise Http404()
+@search_users()
+def search_users_view(request, users):
+    return render(request, 'a_inbox/list_searchusers.html', {'users' : users}) 
+                     
 
 @login_required
 def new_message(request, recipient_id):
@@ -54,6 +63,7 @@ def new_message(request, recipient_id):
     if request.method == 'POST':
         
         form = InboxNewMessageForm(request.POST)
+        print(form , '      form')
         if form.is_valid():
             
             message = form.save(commit=False)

@@ -1,0 +1,20 @@
+{% load static %}
+<ul id="user-list" class="mt-2">
+    {% for user in users %}              
+    <li>
+        <a class="flex items-center justify-between hover:bg-zinc-100 rounded-lg p-2 cursor-pointer"
+        >
+            <div class="flex items-center">
+                <img class="w-10 h-10 object-cover rounded-full mr-1" src="{{user.profile.avatar}}" >
+                <div class="font-bold"> {{user.profile.name}}
+                    {% if user.is_superuser %}    
+                        <span> <img class="w-4 h-4 ml-1" src="{% static 'images/verified.png' %}"/> </span>
+                    {% endif %}
+                    <span class="text-xs font-normal text-zinc-500">@{{user.username}}</span>
+                </div>
+            </div>
+            <input type="checkbox" name="users[]" value="{{ user.id }}" class="form-checkbox h-5 w-5 text-blue-600" />
+        </a>
+    </li>
+    {% endfor %}
+</ul>

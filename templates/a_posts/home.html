@@ -1,4 +1,5 @@
 {% extends "layouts/a.html" %}
+<share x-data="{ share_modal_open: false }">
 
 {% block content %}
 {% for post in posts %}
@@ -24,3 +25,4 @@
 </div>
 
 {% endblock content %}
+</share>

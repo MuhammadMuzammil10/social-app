@@ -33,6 +33,9 @@ urlpatterns = [
     path('post/like/<pk>/' , like_post , name="like-post"),
     
     path('profile/' , profile_view, name="profile"),
+    path('search_users/' , search_share_users_view, name="share-searchusers"),
+    path('sharepost/' , share_post , name="share-post"),    
+    
     
     path('inbox/', include('a_inbox.urls')),
     
@@ -48,8 +51,8 @@ urlpatterns = [
 
     path('reply-sent/<pk>/' , reply_sent, name='reply-sent'),
     path('reply/delete/<pk>' , reply_delete_view, name='reply-delete'),
-    path('reply/like/<pk>/' , like_reply , name="like-reply"),
-    
+    path('reply/like/<pk>/' , like_reply , name="like-reply"),  
+        
 ]
 
 

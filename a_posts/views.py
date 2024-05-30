@@ -8,6 +8,9 @@ from django.contrib import messages
 from django.http import HttpResponse
 from django.db.models import Count
 from django.core.paginator import Paginator
+from a_inbox.views import search_users
+from a_inbox.models import InboxMessage, Conversation
+from django.utils import timezone
 # Create your views here.
 
 def home_view(request, tag_slug=None):
@@ -16,7 +19,6 @@ def home_view(request, tag_slug=None):
         tag_slug = get_object_or_404(Tag, slug = tag_slug)
     else:
         posts = Post.objects.all()
-
         
     paginator = Paginator(posts, 3)
     page = int(request.GET.get('page', 1))
@@ -85,6 +87,7 @@ def post_edit_view(request, pk):
 
 def post_page_view(request, pk):
     post = get_object_or_404(Post, id = pk)
+    path = request.path.strip('/').split('/')[0]
     commentform = CommentCreateForm()
     replyform = ReplyCreateForm()
     
@@ -96,7 +99,7 @@ def post_page_view(request, pk):
         
         return render(request, 'snippets/loop_postpage_comments.html', {'comments' : comments})
     
-    context = {'post' : post, 'commentform'  : commentform, 'replyform' : replyform}
+    context = {'post' : post, 'commentform'  : commentform, 'replyform' : replyform, 'path' : path, 'post_page' : 'post_page'}
     
     return render(request, 'a_posts/post_page.html', context)
 
@@ -180,6 +183,10 @@ def like_toggle(model):
         return wrapper
     return inner_func
 
+@search_users()
+def search_share_users_view(request, users):
+    return render(request, 'a_posts/sharelist_searchuser.html', {'users' : users})  
+
 @like_toggle(Post)
 def like_post(request, post):
     return render(request, 'snippets/likes.html', {"post" : post})
@@ -191,3 +198,50 @@ def like_comment(request, comment):
 @like_toggle(Reply)
 def like_reply(request, reply):
     return render(request, 'snippets/likes_reply.html', {"reply" : reply})
+
+def share_post(request):
+    print(request.POST)
+    
+    post_id = request.POST.get('post_id')
+    post = get_object_or_404(Post, id=post_id)
+    # post_url = request.build_absolute_uri(post.get_absolute_url())
+    # print(post_url, ' post url')
+    users_ids = request.POST.getlist('users[]')
+    print(users_ids)
+    users = User.objects.filter(id__in = users_ids)
+    print(users, ' users ')
+    
+    if users:
+        for recipient in users:
+            message = InboxMessage(share_post = post, sender = request.user)
+            my_conversations = request.user.conversations.all()
+            
+            found_conversation = False
+            
+            for c in my_conversations:
+                
+                if recipient in c.participants.all():
+                        
+                    message.conversation = c
+                    message.save()
+                    
+                    c.lastmessage_created = timezone.now()
+                    c.is_seen = False
+                    c.save()
+                    
+                    found_conversation = True
+                    break
+                
+            if found_conversation == False:
+                
+                new_conversation = Conversation.objects.create()
+                new_conversation.lastmessage_created = timezone.now()
+                new_conversation.participants.add(request.user, recipient)
+                new_conversation.save()
+                
+                message.conversation = new_conversation
+                message.save()
+            
+        return redirect('inbox')
+    
+    return redirect('/')

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block layout %}
+
+<div class="w-full h-fit md:h-[760px] md:-mt-20 flex justify-center relative">
+ 
+    <a href="/post/dab88580-c5b1-450b-9b1c-a38c2a75e895/">
+        <div class="absolute h-full left-0 p-4 md:p-8 flex items-center">
+            <img class="w-6" src="/static/images/arrow.svg">
+        </div>
+    </a>
+
+    <a href="/post/d41e7f8d-1069-43c1-a605-2cca32ee2bc0/">
+        <div class="absolute h-full right-0 p-4 md:p-8 flex items-center">
+            <img class="w-6 rotate-180" src="/static/images/arrow.svg">
+        </div>
+    </a>
+    <div class="absolute md:bg-black opacity-30 w-full h-full -z-10"></div>
+    <img class="h-full object-cover" src="{{ post.image }}">
+</div>
+  <content class="block max-w-7xl mx-auto relative z-0 md:z-10" >
+    <main class="px-4 py-4 md:py-8 max-w-2xl mx-auto">
+        {% block content %}
+
+        {% endblock content %}
+    </main>
+  </content>
+{% endblock layout %}

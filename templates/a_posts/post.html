@@ -1,8 +1,7 @@
 {% load static %}
 <article class="card">
-    <figure class="w-full relative bg-gray-800 overflow-hidden">
-        <a href="{% url 'post' post.id %}"><img class="w-full min-h-40 hover:scale-[105%] transition duration-700"
-                src="{{ post.image }}"></a>
+    <figure>
+        <a href="{% url 'post' post.id %}"><img class="w-full" src="{{ post.image }}"></a>
     </figure>
     <div class="px-4 pt-4">
         <div class="flex flex-col items-center text-center text-4xl md:text-5xl pt-3 pb-4 pr-4 font1 text-slate-700">
@@ -27,7 +26,7 @@
             </div>
             {% endif %}
         </div>  
-        {% if path == author %}  
+        {% if path != author %}  
         <div class="flex items-center justify-between border-b-[1px] h-10 mb-2 px-2">
             <div class="text-start mr-1 text-sm text-gray-500 max-w-[50%] overflow-hidden text-ellipsis whitespace-nowrap">
                 {{ post.title|truncatechars:20 }}</div>
@@ -46,7 +45,7 @@
             <a class="font-bold hover:underline" href="{% url 'post' post.id %}">
                 {% if post.comments.count %}
                 Comments
-                <span id="commentscount-{{ post.id }}" class="font-light text-gray-500 ml-1">{{ post.comments.count }}</span>
+                <span id="commentscount-{{ post.id }}" class="font-light ml-1">{{ post.comments.count }}</span>
                 {% else %}
                 {% if user.is_authenticated %}
                 Add comment
@@ -55,6 +54,13 @@
             </a>
             <div class="flex items-center gap-4 [&>a:hover]:underline">
                 {% include "snippets/likes.html" %}
+                <a @click="share_modal_open = true; post_id = '{{ post.id }}'" p-id="{{ post.id }}">
+                    <img class="w-5 -mt-1" src="{% static 'images/share.svg' %}">
+                </a>
+                {% if post.share_in_messages.count %}
+                <span id="sharescount-{{ post.id }}" class="font-semibold ">{{ post.share_in_messages.count }}</span>
+                {% endif %}
+                
                 {% if request.user.is_authenticated and user == post.author %}
                 <a href="{% url 'post-edit' post.id %}">Edit</a>
                 <a href="{% url 'post-delete' post.id %}">Delete</a>

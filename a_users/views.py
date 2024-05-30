@@ -39,8 +39,8 @@ def profile_view(request, username=None):
             
         return render(request, 'snippets/loop_profile_posts.html', {'posts':posts})
             
-    context = {'profile' : profile, 'posts' : posts, 'new_message_form' : new_message_form}
-    context['path'] = request.path.strip('/')
+    context = {'profile' : profile, 'posts' : posts, 'new_message_form' : new_message_form, 'post' : 'post'}
+    context['path'] = request.path.strip('/').split('/')
     context['author'] = username
     return render(request, 'a_users/profile.html',context )
 

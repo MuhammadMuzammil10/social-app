@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 import uuid
 from django.utils import timezone
 from django.utils.timesince import timesince
+from a_posts.models import Post
 # Create your models here.
 
 ''' the relationship specified by sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_messages") indicates a "many-to-one" relationship between the InboxMessage table and the User table.
@@ -21,6 +22,7 @@ class InboxMessage(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name="sent_messages")
     conversation = models.ForeignKey("Conversation", on_delete=models.CASCADE, related_name="messages")
     body = models.TextField()
+    share_post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True, blank=True, related_name="share_in_messages")
     created = models.DateTimeField(auto_now_add=True)
 
     class Meta:

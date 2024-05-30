@@ -40,12 +40,23 @@
                         </div>
                         <div>{{ message.created }} ({{ message.created|timesince }})</div>
                     </div>
+                    {% if message.body %}                      
                     <div>
                         <p class="whitespace-pre-wrap">{{ message.body }}</p>
                     </div>
+                    {% endif %}
+                    {% if message.share_post %}
+                    <div class="shared-post">
+                        <a href="{% url 'post' message.share_post.id %}">
+                            <img src="{{ message.share_post.image }}" class="w-30" alt="Post Image">
+                        </a>
+                    </div>
+                    {% endif %}
+
                 </div>
             </div>
         </li>
+        
         {% endfor %}
 
     </ul>

@@ -1,0 +1,21 @@
+
+ <li>
+    <!-- Instagram Share Post Card -->
+  <div class="w-30 p-2 bg-white rounded-xl shadow-lg">
+    <!-- Header -->
+    <div class="flex items-center p-2 bg-gray-200 rounded-t-lg">
+      <img src="{{ message.sender.profile.avatar }}" alt="Profile Avatar" class="w-10 h-10 rounded-full">
+      <span class="ml-3 font-semibold">{{ message.sender.username }}</span>
+    </div>
+
+    <!-- Post Image -->
+    <div class="w-full">
+      <img src="{{ message.share_post.image }}" alt="Post Image" class="w-full">
+    </div>
+
+    <!-- Caption -->
+    <div class="p-2 bg-gray-200 rounded-b-lg">
+      <p class="text-sm">{{ message.share_post.body }}</p>
+    </div>
+  </div>
+ </li>

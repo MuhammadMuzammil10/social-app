@@ -12,11 +12,12 @@
         </a>
     </mobileSidebarNav>
     <main class="col-span-full md:col-span-2 md:mr-[5%] lg:mx-[10%] order-2 md:order-1">
-
+    <share x-data="{ share_modal_open: false , post_id: ''}">
         {% block content %}
           
         {% endblock content %}
-
+        {% include "a_posts/share_modal.html" %}
+    </share>
     </main>
     {% load sidebar %}
     {% sidebar_view tag user %}
